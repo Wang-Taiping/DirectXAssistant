@@ -10,18 +10,37 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define CreateCentralWindow(lpClassName, lpWindowName, dwStyle, nWidth, nHeight,\
+#define CreateCentralWindowA(lpClassName, lpWindowName, dwStyle, nWidth, nHeight,\
 	hWndParent, hMenu, hInstance, lpParam)\
-	CreateWindowExW(0L, lpClassName, lpWindowName, dwStyle, \
+	CreateWindowExA(0L, lpClassName, lpWindowName, dwStyle, \
 	(GetSystemMetrics(SM_CXFULLSCREEN) - (nWidth)) / 2, \
 	(GetSystemMetrics(SM_CYFULLSCREEN) - (nHeight)) / 2, \
 	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)
-#define CreateCentralWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, nWidth, nHeight,\
+#define CreateCentralWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, nWidth, nHeight,\
 	hWndParent, hMenu, hInstance, lpParam)\
-	CreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle, \
+	CreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, \
 	(GetSystemMetrics(SM_CXFULLSCREEN) - (nWidth)) / 2, \
 	(GetSystemMetrics(SM_CYFULLSCREEN) - (nHeight)) / 2, \
 	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)
+#define CreateCentralWindowW(lpszClassName, lpszWindowName, dwStyle, nWidth, nHeight,\
+	hWndParent, hMenu, hInstance, lpParam)\
+	CreateWindowExW(0L, lpszClassName, lpszWindowName, dwStyle, \
+	(GetSystemMetrics(SM_CXFULLSCREEN) - (nWidth)) / 2, \
+	(GetSystemMetrics(SM_CYFULLSCREEN) - (nHeight)) / 2, \
+	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)
+#define CreateCentralWindowExW(dwExStyle, lpszClassName, lpszWindowName, dwStyle, nWidth, nHeight,\
+	hWndParent, hMenu, hInstance, lpParam)\
+	CreateWindowExW(dwExStyle, lpszClassName, lpszWindowName, dwStyle, \
+	(GetSystemMetrics(SM_CXFULLSCREEN) - (nWidth)) / 2, \
+	(GetSystemMetrics(SM_CYFULLSCREEN) - (nHeight)) / 2, \
+	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)
+#ifdef UNICODE
+#define CreateCentralWindow		CreateCentralWindowW
+#define CreateCentralWindowEx	CreateCentralWindowExW
+#else
+#define CreateCentralWindow		CreateCentralWindowA
+#define CreateCentralWindowEx	CreateCentralWindowExA
+#endif // !UNICODE
 
 #ifdef DXA_BUILD
 #define DXA_EXPORT __declspec(dllexport)
@@ -71,6 +90,8 @@ DXA_EXPORT HRESULT DXACreateBitmap(IWICImagingFactory* pImagingFactory, ID2D1Ren
 DXA_EXPORT HRESULT DXACreateBitmap(IWICImagingFactory* pImagingFactory, ID2D1RenderTarget* pRenderTarget, HMODULE hModule, LPCWSTR szResourceName, LPCWSTR szResourceType, ID2D1Bitmap** ppBitmap);
 DXA_EXPORT HRESULT DXACreateFontCollection(IDWriteFactory5* pWriteFactory, LPCWSTR szPath, DXAFontCollection* pFontCollection, LPWSTR FontFamilyBuffer, UINT* BufElemNum);
 DXA_EXPORT HRESULT DXACreateFontCollection(IDWriteFactory5* pWriteFactory, HMODULE hModule, LPCWSTR szResourceName, LPCWSTR szResourceType, DXAFontCollection* pFontCollection, LPWSTR FontFamilyBuffer, UINT* BufElemNum);
+
+DXA_EXPORT ATOM RegisterWndClass(HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon = nullptr, HICON hIconSm = nullptr, HCURSOR hCursor = nullptr, LPCWSTR lpszMenuName = nullptr);
 
 #endif // __cplusplus
 

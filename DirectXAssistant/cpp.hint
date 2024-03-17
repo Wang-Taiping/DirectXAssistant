@@ -1,0 +1,2 @@
+#define DXA_EXPORT __declspec(dllexport)
+#define DXA_EXPORT __declspec(dllimport)

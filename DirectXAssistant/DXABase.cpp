@@ -1,4 +1,4 @@
-#include "dxa_base.h"
+#include "DXABase.h"
 #include <wincodec.h>
 #include <wincodecsdk.h>
 
@@ -309,4 +309,19 @@ HRESULT DXACreateFontCollection(IDWriteFactory5* pWriteFactory, HMODULE hModule,
 		pFontCollection->pWriteFactory = pWriteFactory;
 	}
 	return hr;
+}
+
+ATOM RegisterWndClass(HINSTANCE hInstance, LPCWSTR lpszClassName, WNDPROC lpfnWndProc, HICON hIcon, HICON hIconSm, HCURSOR hCursor, LPCWSTR lpszMenuName)
+{
+	WNDCLASSEXW wcex = { 0 };
+	wcex.cbSize = sizeof(WNDCLASSEXW);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.hInstance = hInstance;
+	wcex.lpszClassName = lpszClassName;
+	wcex.lpfnWndProc = lpfnWndProc;
+	wcex.hIcon = hIcon;
+	wcex.hIconSm = hIconSm;
+	wcex.hCursor = hCursor ? hCursor : LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
+	wcex.lpszMenuName = lpszMenuName;
+	return RegisterClassExW(&wcex);
 }

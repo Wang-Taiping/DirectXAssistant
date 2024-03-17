@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dxa_base.cpp">
+    <ClCompile Include="DXAContext.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dxa_context.cpp">
+    <ClCompile Include="DXABase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="dxa_base.h">
+    <ClInclude Include="DXABase.h">
       <Filter>头文件</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="dxa_context.h">
+    </ClInclude>
+    <ClInclude Include="DXAContext.h">
       <Filter>头文件</Filter>
-    </CopyFileToFolders>
+    </ClInclude>
   </ItemGroup>
 </Project>
