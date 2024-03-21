@@ -165,7 +165,59 @@ void DXAContext::DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F B
 	pBrush = nullptr;
 }
 
-HWND DXAContext::hWnd()
+bool DXAContext::DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DXATextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap, D2D1_COLOR_F FrontColor, D2D1_COLOR_F BackColor)
+{
+	// 先使用IDWriteTextLayout计算结果，如果不会溢出则直接输出到窗口
+	// 如果计算发现会溢出则使用Layout减小字号再次计算，直至不会溢出为止
+	// 如果字号减小到预设的最小值还是会溢出就返回false
+	if (!szText || !TextFormat) return false;
+	IDWriteTextLayout* pLayout = nullptr;
+	HRESULT hr = TextFormat->WriteFactory()->CreateTextLayout(
+		szText,
+		wcslen(szText),
+		TextFormat->TextFormat(),
+		Rect.right - Rect.left,
+		Rect.bottom - Rect.top,
+		&pLayout
+	);
+	pLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	float fFontSize = TextFormat->FontSize();
+	ID2D1SolidColorBrush* pBrush = nullptr;
+	if (SUCCEEDED(hr)) {
+		if (pBackgroundBitmap) FillBitmap(pBackgroundBitmap, Rect);
+		else {
+			hr = p2DContext->CreateSolidColorBrush(BackColor, &pBrush);
+			if (pBrush) p2DContext->FillRectangle(Rect, pBrush);
+			pBrush->Release();
+		}
+		hr = p2DContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &pBrush);
+		if (pBrush) p2DContext->DrawRectangle(Rect, pBrush);
+		pBrush->Release();
+	}
+	if (SUCCEEDED(hr)) {
+		DWRITE_TEXT_METRICS textMetrics = { 0 };
+		DWRITE_TEXT_RANGE textRange = { 0, wcslen(szText) };
+		D2D1_SIZE_F size = { 0 };
+		while (true) {
+			hr = pLayout->GetMetrics(&textMetrics);
+			if (textMetrics.widthIncludingTrailingWhitespace > Rect.right - Rect.left ||
+				textMetrics.height > Rect.bottom - Rect.top) {
+				if (fFontSize <= 8) return false;
+				fFontSize -= 8;
+				hr = pLayout->SetFontSize(fFontSize, textRange);
+			}
+			else break;
+		}
+		float vstart = ((Rect.bottom - Rect.top) - textMetrics.height) / 2;
+		p2DContext->CreateSolidColorBrush(FrontColor, &pBrush);
+		if (pLayout && pBrush) p2DContext->DrawTextLayout({ Rect.left, Rect.top + vstart }, pLayout, pBrush);
+		pBrush->Release();
+		return true;
+	}
+	return false;
+}
+
+HWND DXAContext::hWnd() const
 {
 	return handle_hWnd;
 }

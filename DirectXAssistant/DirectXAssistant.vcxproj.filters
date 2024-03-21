@@ -21,12 +21,18 @@
     <ClCompile Include="DXABase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DXAWrite.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXABase.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DXAContext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DXAWrite.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

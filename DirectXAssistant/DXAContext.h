@@ -3,9 +3,11 @@
 #ifndef DXA_CONTEXT_H
 #define DXA_CONTEXT_H
 
+#include "DXABase.h"
+#include "DXAWrite.h"
+
 #ifdef __cplusplus
 
-#include "DXABase.h"
 #include <d3d11_4.h>
 
 class DXA_EXPORT DXADevice // 使用设备像素而非DIP像素
@@ -54,7 +56,8 @@ public:
 	void FillBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
 	D2D1_RECT_F PutBitmap(ID2D1Bitmap* pBitmap, D2D1_RECT_F dstRect, D2D1_RECT_F srcRect = { 0 });
 	void DrawProgress(D2D1_RECT_F Rect, float Percentage, D2D1_COLOR_F BackColor, D2D1_COLOR_F FrontColor); // 0.0f ~ 100.0f
-	HWND hWnd();
+	bool DrawButton(D2D1_RECT_F Rect, LPCWSTR szText, DXATextFormat* TextFormat, ID2D1Bitmap* pBackgroundBitmap = nullptr, D2D1_COLOR_F FrontColor = D2D1::ColorF(D2D1::ColorF::Black), D2D1_COLOR_F BackColor = D2D1::ColorF(D2D1::ColorF::White));
+	HWND hWnd() const;
 	//IDXGISwapChain1* DXGISwapChain();
 	//IDXGISurface* DXGISurface();
 	ID2D1Factory1* D2DFactory();
